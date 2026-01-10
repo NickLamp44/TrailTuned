@@ -97,3 +97,16 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
 -- RockShox Super Deluxe Coil (2024-2021) - Coil
 ('shock', 'RockShox', 'Super Deluxe Ultimate Coil', 2024, 'coil', '{"hsc": true, "lsc": true, "hsr": false, "lsr": false, "air_pressure": false, "volume_spacers": false, "spring_rate": true, "rebound": true}'),
 ('shock', 'RockShox', 'Super Deluxe Ultimate Coil', 2023, 'coil', '{"hsc": true, "lsc": true, "hsr": false, "lsr": false, "air_pressure": false, "volume_spacers": false, "spring_rate": true, "rebound": true}');
+
+
+-- Brands 
+-- Rockshox
+-- Fox 
+-- Cane Creek 
+-- Ohlins 
+-- DT Swiss
+-- Marzochi 
+-- SR Suntour 
+-- Mantue 
+-- EXT
+-- Formula
