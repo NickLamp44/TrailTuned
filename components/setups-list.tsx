@@ -1,28 +1,59 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Plus, Settings, Edit } from "lucide-react"
-import Link from "next/link"
-import { formatDate } from "@/lib/utils"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Settings, Edit, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { formatDate } from "@/lib/utils";
+import { useState } from "react";
+import { createBrowserClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 interface Setup {
-  id: string
-  setup_name: string
-  fork_brand: string | null
-  fork_model: string | null
-  shock_brand: string | null
-  shock_model: string | null
-  notes: string | null
-  created_at: string
+  id: string;
+  setup_name: string;
+  fork_brand: string | null;
+  fork_model: string | null;
+  shock_brand: string | null;
+  shock_model: string | null;
+  notes: string | null;
+  created_at: string;
 }
 
 interface SetupsListProps {
-  bikeId: string
-  setups: Setup[]
+  bikeId: string;
+  setups: Setup[];
 }
 
 export function SetupsList({ bikeId, setups }: SetupsListProps) {
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const router = useRouter();
+  const supabase = createBrowserClient();
+
+  const handleDelete = async (setupId: string, setupName: string) => {
+    if (!confirm(`Are you sure you want to delete "${setupName}"?`)) {
+      return;
+    }
+
+    setDeletingId(setupId);
+
+    try {
+      const { error } = await supabase
+        .from("suspension_setups")
+        .delete()
+        .eq("id", setupId);
+
+      if (error) throw error;
+
+      router.refresh();
+    } catch (error) {
+      console.error("Error deleting setup:", error);
+      alert("Failed to delete setup. Please try again.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -55,13 +86,27 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
                       <Settings className="h-5 w-5 text-primary" />
                       {setup.setup_name}
                     </CardTitle>
-                    <p className="text-sm text-muted-foreground">Created: {formatDate(setup.created_at)}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Created: {formatDate(setup.created_at)}
+                    </p>
                   </div>
-                  <Link href={`/dashboard/bikes/${bikeId}/setups/${setup.id}/edit`}>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-4 w-4" />
+                  <div className="flex gap-2">
+                    <Link
+                      href={`/dashboard/bikes/${bikeId}/setups/${setup.id}/edit`}
+                    >
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(setup.id, setup.setup_name)}
+                      disabled={deletingId === setup.id}
+                    >
+                      <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
-                  </Link>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -73,7 +118,9 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
                         {setup.fork_brand} {setup.fork_model}
                       </p>
                     ) : (
-                      <p className="text-sm text-muted-foreground">Not configured</p>
+                      <p className="text-sm text-muted-foreground">
+                        Not configured
+                      </p>
                     )}
                   </div>
                   <div>
@@ -83,13 +130,17 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
                         {setup.shock_brand} {setup.shock_model}
                       </p>
                     ) : (
-                      <p className="text-sm text-muted-foreground">Not configured</p>
+                      <p className="text-sm text-muted-foreground">
+                        Not configured
+                      </p>
                     )}
                   </div>
                 </div>
                 {setup.notes && (
                   <div className="mt-4">
-                    <p className="text-sm text-muted-foreground line-clamp-2">{setup.notes}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {setup.notes}
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -98,5 +149,5 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
         </div>
       )}
     </div>
-  )
+  );
 }
