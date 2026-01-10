@@ -34,7 +34,7 @@ export default async function BikePage({
 
   return (
     <DashboardShell user={data.user}>
-      <div className="space-y-6">
+      <div className="space-y-6 mx-auto max-w-5xl">
         <BikeDetails bike={bike} />
         <SetupsList bikeId={bikeId} setups={setups || []} />
       </div>

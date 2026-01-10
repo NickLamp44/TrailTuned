@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { DashboardShell } from "@/components/dashboard-shell"
-import { AddSetupForm } from "@/components/add-setup-form"
+import { SetupForm } from "@/components/setup-form"
 
 export default async function AddSetupPage({
   params,
@@ -25,14 +25,14 @@ export default async function AddSetupPage({
 
   return (
     <DashboardShell user={data.user}>
-      <div className="space-y-6 max-w-4xl">
+      <div className="space-y-6 max-w-4xl mx-auto">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Add Suspension Setup</h2>
           <p className="text-muted-foreground">
             Track your fork and shock settings for {bike.brand} {bike.model}
           </p>
         </div>
-        <AddSetupForm bikeId={bikeId} userId={data.user.id} />
+        <SetupForm bikeId={bikeId} userId={data.user.id} />
       </div>
     </DashboardShell>
   )

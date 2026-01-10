@@ -48,7 +48,7 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
           </nav>
         </div>
       </header>
-      <main className="flex-1 container py-8 px-4 md:px-6 lg:px-8 bg-background">{children}</main>
+      <main className="flex-1 container mx-auto py-8 px-4 md:px-6 lg:px-8 bg-background max-w-7xl">{children}</main>
     </div>
   )
 }

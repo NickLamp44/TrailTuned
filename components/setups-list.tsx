@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Settings } from "lucide-react"
+import { Plus, Settings, Edit } from "lucide-react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 
@@ -49,11 +49,20 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
           {setups.map((setup) => (
             <Card key={setup.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5 text-primary" />
-                  {setup.setup_name}
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">Created: {formatDate(setup.created_at)}</p>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="flex items-center gap-2">
+                      <Settings className="h-5 w-5 text-primary" />
+                      {setup.setup_name}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">Created: {formatDate(setup.created_at)}</p>
+                  </div>
+                  <Link href={`/dashboard/bikes/${bikeId}/setups/${setup.id}/edit`}>
+                    <Button variant="ghost" size="sm">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2">
