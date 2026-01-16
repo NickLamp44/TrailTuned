@@ -1,37 +1,37 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface AddBikeFormProps {
-  userId: string
+  userId: string;
 }
 
 export function AddBikeForm({ userId }: AddBikeFormProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     brand: "",
     model: "",
     year: new Date().getFullYear(),
     frame_details: "",
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-    const supabase = createClient()
+    const supabase = createClient();
 
     try {
       const { error } = await supabase.from("bikes").insert({
@@ -40,17 +40,17 @@ export function AddBikeForm({ userId }: AddBikeFormProps) {
         model: formData.model,
         year: formData.year,
         frame_details: formData.frame_details || null,
-      })
+      });
 
-      if (error) throw error
+      if (error) throw error;
 
-      router.push("/dashboard")
+      router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred")
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Card>
@@ -67,7 +67,9 @@ export function AddBikeForm({ userId }: AddBikeFormProps) {
                 placeholder="e.g., Santa Cruz, Trek, Specialized"
                 required
                 value={formData.brand}
-                onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, brand: e.target.value })
+                }
               />
             </div>
             <div className="space-y-2">
@@ -77,7 +79,9 @@ export function AddBikeForm({ userId }: AddBikeFormProps) {
                 placeholder="e.g., Bronson, Slash, Enduro"
                 required
                 value={formData.model}
-                onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, model: e.target.value })
+                }
               />
             </div>
           </div>
@@ -91,7 +95,12 @@ export function AddBikeForm({ userId }: AddBikeFormProps) {
               max={new Date().getFullYear() + 1}
               required
               value={formData.year}
-              onChange={(e) => setFormData({ ...formData, year: Number.parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  year: Number.parseInt(e.target.value),
+                })
+              }
             />
           </div>
 
@@ -102,7 +111,9 @@ export function AddBikeForm({ userId }: AddBikeFormProps) {
               placeholder="e.g., Size L, carbon frame, 160mm travel..."
               rows={4}
               value={formData.frame_details}
-              onChange={(e) => setFormData({ ...formData, frame_details: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, frame_details: e.target.value })
+              }
             />
           </div>
 
@@ -112,12 +123,16 @@ export function AddBikeForm({ userId }: AddBikeFormProps) {
             <Button type="submit" disabled={isLoading}>
               {isLoading ? "Adding..." : "Add Bike"}
             </Button>
-            <Button type="button" variant="outline" onClick={() => router.push("/dashboard")}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push("/dashboard")}
+            >
               Cancel
             </Button>
           </div>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

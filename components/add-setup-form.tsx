@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface AddSetupFormProps {
-  bikeId: string
-  userId: string
+  bikeId: string;
+  userId: string;
 }
 
 export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     setup_name: "",
     // Fork
@@ -47,14 +47,14 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
     shock_notes: "",
     // General
     notes: "",
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-    const supabase = createClient()
+    const supabase = createClient();
 
     try {
       const { error } = await supabase.from("suspension_setups").insert({
@@ -68,34 +68,54 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
         fork_lsc: formData.fork_lsc ? Number.parseInt(formData.fork_lsc) : null,
         fork_hsr: formData.fork_hsr ? Number.parseInt(formData.fork_hsr) : null,
         fork_lsr: formData.fork_lsr ? Number.parseInt(formData.fork_lsr) : null,
-        fork_air_pressure: formData.fork_air_pressure ? Number.parseFloat(formData.fork_air_pressure) : null,
-        fork_volume_spacers: formData.fork_volume_spacers ? Number.parseInt(formData.fork_volume_spacers) : null,
-        fork_spring_rate: formData.fork_spring_rate ? Number.parseFloat(formData.fork_spring_rate) : null,
+        fork_air_pressure: formData.fork_air_pressure
+          ? Number.parseFloat(formData.fork_air_pressure)
+          : null,
+        fork_volume_spacers: formData.fork_volume_spacers
+          ? Number.parseInt(formData.fork_volume_spacers)
+          : null,
+        fork_spring_rate: formData.fork_spring_rate
+          ? Number.parseFloat(formData.fork_spring_rate)
+          : null,
         fork_notes: formData.fork_notes || null,
         // Shock
         shock_brand: formData.shock_brand || null,
         shock_model: formData.shock_model || null,
-        shock_hsc: formData.shock_hsc ? Number.parseInt(formData.shock_hsc) : null,
-        shock_lsc: formData.shock_lsc ? Number.parseInt(formData.shock_lsc) : null,
-        shock_hsr: formData.shock_hsr ? Number.parseInt(formData.shock_hsr) : null,
-        shock_lsr: formData.shock_lsr ? Number.parseInt(formData.shock_lsr) : null,
-        shock_air_pressure: formData.shock_air_pressure ? Number.parseFloat(formData.shock_air_pressure) : null,
-        shock_volume_spacers: formData.shock_volume_spacers ? Number.parseInt(formData.shock_volume_spacers) : null,
-        shock_spring_rate: formData.shock_spring_rate ? Number.parseFloat(formData.shock_spring_rate) : null,
+        shock_hsc: formData.shock_hsc
+          ? Number.parseInt(formData.shock_hsc)
+          : null,
+        shock_lsc: formData.shock_lsc
+          ? Number.parseInt(formData.shock_lsc)
+          : null,
+        shock_hsr: formData.shock_hsr
+          ? Number.parseInt(formData.shock_hsr)
+          : null,
+        shock_lsr: formData.shock_lsr
+          ? Number.parseInt(formData.shock_lsr)
+          : null,
+        shock_air_pressure: formData.shock_air_pressure
+          ? Number.parseFloat(formData.shock_air_pressure)
+          : null,
+        shock_volume_spacers: formData.shock_volume_spacers
+          ? Number.parseInt(formData.shock_volume_spacers)
+          : null,
+        shock_spring_rate: formData.shock_spring_rate
+          ? Number.parseFloat(formData.shock_spring_rate)
+          : null,
         shock_notes: formData.shock_notes || null,
         // General
         notes: formData.notes || null,
-      })
+      });
 
-      if (error) throw error
+      if (error) throw error;
 
-      router.push(`/dashboard/bikes/${bikeId}`)
+      router.push(`/dashboard/bikes/${bikeId}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred")
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -111,7 +131,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
               placeholder="e.g., Park Setup, XC Race, All Mountain"
               required
               value={formData.setup_name}
-              onChange={(e) => setFormData({ ...formData, setup_name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, setup_name: e.target.value })
+              }
             />
           </div>
         </CardContent>
@@ -136,7 +158,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     id="fork_brand"
                     placeholder="e.g., RockShox, Fox, Ohlins"
                     value={formData.fork_brand}
-                    onChange={(e) => setFormData({ ...formData, fork_brand: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fork_brand: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -145,7 +169,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     id="fork_model"
                     placeholder="e.g., Lyrik, 38, RXF38"
                     value={formData.fork_model}
-                    onChange={(e) => setFormData({ ...formData, fork_model: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fork_model: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -159,7 +185,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="0"
                     value={formData.fork_hsc}
-                    onChange={(e) => setFormData({ ...formData, fork_hsc: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fork_hsc: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -170,7 +198,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="0"
                     value={formData.fork_lsc}
-                    onChange={(e) => setFormData({ ...formData, fork_lsc: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fork_lsc: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -181,7 +211,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="0"
                     value={formData.fork_hsr}
-                    onChange={(e) => setFormData({ ...formData, fork_hsr: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fork_hsr: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -192,7 +224,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="0"
                     value={formData.fork_lsr}
-                    onChange={(e) => setFormData({ ...formData, fork_lsr: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fork_lsr: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -207,7 +241,12 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="85"
                     value={formData.fork_air_pressure}
-                    onChange={(e) => setFormData({ ...formData, fork_air_pressure: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        fork_air_pressure: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -218,7 +257,12 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="2"
                     value={formData.fork_volume_spacers}
-                    onChange={(e) => setFormData({ ...formData, fork_volume_spacers: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        fork_volume_spacers: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -230,7 +274,12 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="5.5"
                     value={formData.fork_spring_rate}
-                    onChange={(e) => setFormData({ ...formData, fork_spring_rate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        fork_spring_rate: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -242,7 +291,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                   placeholder="Additional fork settings or observations..."
                   rows={3}
                   value={formData.fork_notes}
-                  onChange={(e) => setFormData({ ...formData, fork_notes: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fork_notes: e.target.value })
+                  }
                 />
               </div>
             </CardContent>
@@ -262,7 +313,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     id="shock_brand"
                     placeholder="e.g., RockShox, Fox, Ohlins"
                     value={formData.shock_brand}
-                    onChange={(e) => setFormData({ ...formData, shock_brand: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, shock_brand: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -271,7 +324,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     id="shock_model"
                     placeholder="e.g., Super Deluxe, Float X, TTX"
                     value={formData.shock_model}
-                    onChange={(e) => setFormData({ ...formData, shock_model: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, shock_model: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -285,7 +340,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="0"
                     value={formData.shock_hsc}
-                    onChange={(e) => setFormData({ ...formData, shock_hsc: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, shock_hsc: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -296,7 +353,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="0"
                     value={formData.shock_lsc}
-                    onChange={(e) => setFormData({ ...formData, shock_lsc: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, shock_lsc: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -307,7 +366,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="0"
                     value={formData.shock_hsr}
-                    onChange={(e) => setFormData({ ...formData, shock_hsr: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, shock_hsr: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -318,7 +379,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="0"
                     value={formData.shock_lsr}
-                    onChange={(e) => setFormData({ ...formData, shock_lsr: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, shock_lsr: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -333,7 +396,12 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="200"
                     value={formData.shock_air_pressure}
-                    onChange={(e) => setFormData({ ...formData, shock_air_pressure: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        shock_air_pressure: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -344,7 +412,12 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="1"
                     value={formData.shock_volume_spacers}
-                    onChange={(e) => setFormData({ ...formData, shock_volume_spacers: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        shock_volume_spacers: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -356,7 +429,12 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                     min="0"
                     placeholder="550"
                     value={formData.shock_spring_rate}
-                    onChange={(e) => setFormData({ ...formData, shock_spring_rate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        shock_spring_rate: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -368,7 +446,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
                   placeholder="Additional shock settings or observations..."
                   rows={3}
                   value={formData.shock_notes}
-                  onChange={(e) => setFormData({ ...formData, shock_notes: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, shock_notes: e.target.value })
+                  }
                 />
               </div>
             </CardContent>
@@ -388,7 +468,9 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
               placeholder="Overall impressions, trail conditions, rider weight, etc..."
               rows={4}
               value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, notes: e.target.value })
+              }
             />
           </div>
         </CardContent>
@@ -400,10 +482,14 @@ export function AddSetupForm({ bikeId, userId }: AddSetupFormProps) {
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Saving..." : "Save Setup"}
         </Button>
-        <Button type="button" variant="outline" onClick={() => router.push(`/dashboard/bikes/${bikeId}`)}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.push(`/dashboard/bikes/${bikeId}`)}
+        >
           Cancel
         </Button>
       </div>
     </form>
-  )
+  );
 }

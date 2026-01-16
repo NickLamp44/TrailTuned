@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, X } from "lucide-react";
+import { AdjustmentInput } from "@/components/adjustment-input";
 
 interface SetupFormProps {
   bikeId: string;
@@ -151,6 +152,15 @@ export function SetupForm({
   const [formData, setFormData] = useState<SetupData>(
     initialData ? normalizeSetupData(initialData) : normalizeSetupData({})
   );
+
+  useEffect(() => {
+    if (initialData?.fork_component_id) {
+      setForkExpanded(true);
+    }
+    if (initialData?.shock_component_id) {
+      setShockExpanded(true);
+    }
+  }, []);
 
   useEffect(() => {
     const loadComponents = async () => {
@@ -320,6 +330,33 @@ export function SetupForm({
     selectedShockModel,
     allComponents,
   ]);
+
+  useEffect(() => {
+    if (initialData?.fork_component_id && allComponents.length > 0) {
+      const fork = allComponents.find(
+        (f) => f.id === initialData.fork_component_id
+      );
+      if (fork) {
+        setForkExpanded(true);
+        setSelectedFork(fork);
+        setSelectedForkBrand(fork.brand);
+        setSelectedForkYear(fork.year.toString());
+        setSelectedForkModel(fork.model);
+      }
+    }
+    if (initialData?.shock_component_id && allComponents.length > 0) {
+      const shock = allComponents.find(
+        (s) => s.id === initialData.shock_component_id
+      );
+      if (shock) {
+        setShockExpanded(true);
+        setSelectedShock(shock);
+        setSelectedShockBrand(shock.brand);
+        setSelectedShockYear(shock.year.toString());
+        setSelectedShockModel(shock.model);
+      }
+    }
+  }, [initialData, allComponents]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -613,215 +650,145 @@ export function SetupForm({
                     </p>
                   )}
 
-                  <div className="space-y-4">
-                    <h5 className="text-sm font-medium text-muted-foreground">
-                      Damper Adjustments
-                    </h5>
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                      {/* Compression adjustments - either split (HSC/LSC) or generic */}
-                      {selectedFork.available_adjustments.hsc &&
-                      selectedFork.available_adjustments.lsc ? (
-                        <>
-                          <div className="space-y-2">
-                            <Label htmlFor="fork_hsc">HSC (clicks)</Label>
-                            <Input
-                              id="fork_hsc"
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={formData.fork_hsc}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  fork_hsc: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="fork_lsc">LSC (clicks)</Label>
-                            <Input
-                              id="fork_lsc"
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={formData.fork_lsc}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  fork_lsc: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                        </>
-                      ) : selectedFork.available_adjustments.compression ? (
-                        <div className="space-y-2">
-                          <Label htmlFor="fork_compression">
-                            Compression (clicks)
-                          </Label>
-                          <Input
-                            id="fork_compression"
-                            type="number"
-                            min="0"
-                            placeholder="0"
-                            value={formData.fork_compression}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                fork_compression: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                      ) : null}
-
-                      {/* Rebound adjustments - either split (HSR/LSR) or generic */}
-                      {selectedFork.available_adjustments.hsr &&
-                      selectedFork.available_adjustments.lsr ? (
-                        <>
-                          <div className="space-y-2">
-                            <Label htmlFor="fork_hsr">HSR (clicks)</Label>
-                            <Input
-                              id="fork_hsr"
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={formData.fork_hsr}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  fork_hsr: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="fork_lsr">LSR (clicks)</Label>
-                            <Input
-                              id="fork_lsr"
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={formData.fork_lsr}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  fork_lsr: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                        </>
-                      ) : selectedFork.available_adjustments.rebound ? (
-                        <div className="space-y-2">
-                          <Label htmlFor="fork_rebound">Rebound (clicks)</Label>
-                          <Input
-                            id="fork_rebound"
-                            type="number"
-                            min="0"
-                            placeholder="0"
-                            value={formData.fork_rebound}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                fork_rebound: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h5 className="text-sm font-medium text-muted-foreground">
-                      Spring Settings
-                    </h5>
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                      {selectedFork.available_adjustments.air_pressure && (
-                        <div className="space-y-2">
-                          <Label htmlFor="fork_air_pressure">
-                            Air Pressure (PSI)
-                          </Label>
-                          <Input
-                            id="fork_air_pressure"
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            placeholder="85"
+                  <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+                    {/* Spring Settings - Left side */}
+                    <div className="space-y-4">
+                      <h5 className="text-sm font-medium text-muted-foreground">
+                        Spring Settings
+                      </h5>
+                      <div className="space-y-3">
+                        {selectedFork.available_adjustments.air_pressure && (
+                          <AdjustmentInput
+                            label="Air Pressure (PSI)"
                             value={formData.fork_air_pressure}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                fork_air_pressure: e.target.value,
-                              })
+                            onChange={(v) =>
+                              setFormData({ ...formData, fork_air_pressure: v })
                             }
+                            id="fork_air_pressure"
+                            step={1}
+                            unit="PSI"
                           />
-                        </div>
-                      )}
-                      {selectedFork.available_adjustments.has_ramp_chamber && (
-                        <div className="space-y-2">
-                          <Label htmlFor="fork_ramp_chamber_pressure">
-                            Ramp Chamber Pressure (PSI)
-                          </Label>
-                          <Input
-                            id="fork_ramp_chamber_pressure"
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            placeholder="50"
+                        )}
+                        {selectedFork.available_adjustments
+                          .has_ramp_chamber && (
+                          <AdjustmentInput
+                            label="Ramp Chamber (PSI)"
                             value={formData.fork_ramp_chamber_pressure}
-                            onChange={(e) =>
+                            onChange={(v) =>
                               setFormData({
                                 ...formData,
-                                fork_ramp_chamber_pressure: e.target.value,
+                                fork_ramp_chamber_pressure: v,
                               })
                             }
+                            id="fork_ramp_chamber_pressure"
+                            step={1}
+                            unit="PSI"
                           />
-                        </div>
-                      )}
-                      {selectedFork.available_adjustments.volume_spacers && (
-                        <div className="space-y-2">
-                          <Label htmlFor="fork_volume_spacers">
-                            Volume Spacers
-                          </Label>
-                          <Input
-                            id="fork_volume_spacers"
-                            type="number"
-                            min="0"
-                            placeholder="2"
+                        )}
+                        {selectedFork.available_adjustments.volume_spacers && (
+                          <AdjustmentInput
+                            label="Volume Spacers"
                             value={formData.fork_volume_spacers}
-                            onChange={(e) =>
+                            onChange={(v) =>
                               setFormData({
                                 ...formData,
-                                fork_volume_spacers: e.target.value,
+                                fork_volume_spacers: v,
                               })
                             }
+                            id="fork_volume_spacers"
+                            step={1}
                           />
-                        </div>
-                      )}
-                      {selectedFork.available_adjustments.spring_rate && (
-                        <div className="space-y-2">
-                          <Label htmlFor="fork_spring_rate">
-                            Spring Rate (lb/in)
-                          </Label>
-                          <Input
-                            id="fork_spring_rate"
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            placeholder="5.5"
+                        )}
+                        {selectedFork.available_adjustments.spring_rate && (
+                          <AdjustmentInput
+                            label="Spring Rate (lb/in)"
                             value={formData.fork_spring_rate}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                fork_spring_rate: e.target.value,
-                              })
+                            onChange={(v) =>
+                              setFormData({ ...formData, fork_spring_rate: v })
                             }
+                            id="fork_spring_rate"
+                            step={0.01}
+                            unit="lb/in"
                           />
-                        </div>
-                      )}
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Damper Adjustments - Right side */}
+                    <div className="space-y-4">
+                      <h5 className="text-sm font-medium text-muted-foreground">
+                        Damper Adjustments
+                      </h5>
+                      <div className="space-y-4">
+                        {/* HSC/LSC on top, HSR/LSR below */}
+                        {selectedFork.available_adjustments.hsc &&
+                        selectedFork.available_adjustments.lsc ? (
+                          <div className="grid grid-cols-2 gap-3">
+                            <AdjustmentInput
+                              label="HSC (clicks)"
+                              value={formData.fork_hsc}
+                              onChange={(v) =>
+                                setFormData({ ...formData, fork_hsc: v })
+                              }
+                              id="fork_hsc"
+                              step={1}
+                            />
+                            <AdjustmentInput
+                              label="LSC (clicks)"
+                              value={formData.fork_lsc}
+                              onChange={(v) =>
+                                setFormData({ ...formData, fork_lsc: v })
+                              }
+                              id="fork_lsc"
+                              step={1}
+                            />
+                          </div>
+                        ) : selectedFork.available_adjustments.compression ? (
+                          <AdjustmentInput
+                            label="Compression (clicks)"
+                            value={formData.fork_compression}
+                            onChange={(v) =>
+                              setFormData({ ...formData, fork_compression: v })
+                            }
+                            id="fork_compression"
+                            step={1}
+                          />
+                        ) : null}
+
+                        {selectedFork.available_adjustments.hsr &&
+                        selectedFork.available_adjustments.lsr ? (
+                          <div className="grid grid-cols-2 gap-3">
+                            <AdjustmentInput
+                              label="HSR (clicks)"
+                              value={formData.fork_hsr}
+                              onChange={(v) =>
+                                setFormData({ ...formData, fork_hsr: v })
+                              }
+                              id="fork_hsr"
+                              step={1}
+                            />
+                            <AdjustmentInput
+                              label="LSR (clicks)"
+                              value={formData.fork_lsr}
+                              onChange={(v) =>
+                                setFormData({ ...formData, fork_lsr: v })
+                              }
+                              id="fork_lsr"
+                              step={1}
+                            />
+                          </div>
+                        ) : selectedFork.available_adjustments.rebound ? (
+                          <AdjustmentInput
+                            label="Rebound (clicks)"
+                            value={formData.fork_rebound}
+                            onChange={(v) =>
+                              setFormData({ ...formData, fork_rebound: v })
+                            }
+                            id="fork_rebound"
+                            step={1}
+                          />
+                        ) : null}
+                      </div>
                     </div>
                   </div>
 
@@ -942,217 +909,147 @@ export function SetupForm({
                     </p>
                   )}
 
-                  <div className="space-y-4">
-                    <h5 className="text-sm font-medium text-muted-foreground">
-                      Damper Adjustments
-                    </h5>
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                      {/* Compression adjustments - either split (HSC/LSC) or generic */}
-                      {selectedShock.available_adjustments.hsc &&
-                      selectedShock.available_adjustments.lsc ? (
-                        <>
-                          <div className="space-y-2">
-                            <Label htmlFor="shock_hsc">HSC (clicks)</Label>
-                            <Input
-                              id="shock_hsc"
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={formData.shock_hsc}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  shock_hsc: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="shock_lsc">LSC (clicks)</Label>
-                            <Input
-                              id="shock_lsc"
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={formData.shock_lsc}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  shock_lsc: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                        </>
-                      ) : selectedShock.available_adjustments.compression ? (
-                        <div className="space-y-2">
-                          <Label htmlFor="shock_compression">
-                            Compression (clicks)
-                          </Label>
-                          <Input
-                            id="shock_compression"
-                            type="number"
-                            min="0"
-                            placeholder="0"
-                            value={formData.shock_compression}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                shock_compression: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                      ) : null}
-
-                      {/* Rebound adjustments - either split (HSR/LSR) or generic */}
-                      {selectedShock.available_adjustments.hsr &&
-                      selectedShock.available_adjustments.lsr ? (
-                        <>
-                          <div className="space-y-2">
-                            <Label htmlFor="shock_hsr">HSR (clicks)</Label>
-                            <Input
-                              id="shock_hsr"
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={formData.shock_hsr}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  shock_hsr: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="shock_lsr">LSR (clicks)</Label>
-                            <Input
-                              id="shock_lsr"
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              value={formData.shock_lsr}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  shock_lsr: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                        </>
-                      ) : selectedShock.available_adjustments.rebound ? (
-                        <div className="space-y-2">
-                          <Label htmlFor="shock_rebound">
-                            Rebound (clicks)
-                          </Label>
-                          <Input
-                            id="shock_rebound"
-                            type="number"
-                            min="0"
-                            placeholder="0"
-                            value={formData.shock_rebound}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                shock_rebound: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h5 className="text-sm font-medium text-muted-foreground">
-                      Spring Settings
-                    </h5>
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                      {selectedShock.available_adjustments.air_pressure && (
-                        <div className="space-y-2">
-                          <Label htmlFor="shock_air_pressure">
-                            Air Pressure (PSI)
-                          </Label>
-                          <Input
-                            id="shock_air_pressure"
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            placeholder="200"
+                  <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+                    {/* Spring Settings - Left side */}
+                    <div className="space-y-4">
+                      <h5 className="text-sm font-medium text-muted-foreground">
+                        Spring Settings
+                      </h5>
+                      <div className="space-y-3">
+                        {selectedShock.available_adjustments.air_pressure && (
+                          <AdjustmentInput
+                            label="Air Pressure (PSI)"
                             value={formData.shock_air_pressure}
-                            onChange={(e) =>
+                            onChange={(v) =>
                               setFormData({
                                 ...formData,
-                                shock_air_pressure: e.target.value,
+                                shock_air_pressure: v,
                               })
                             }
+                            id="shock_air_pressure"
+                            step={1}
+                            unit="PSI"
                           />
-                        </div>
-                      )}
-                      {selectedShock.available_adjustments.has_ramp_chamber && (
-                        <div className="space-y-2">
-                          <Label htmlFor="shock_ramp_chamber_pressure">
-                            Ramp Chamber Pressure (PSI)
-                          </Label>
-                          <Input
-                            id="shock_ramp_chamber_pressure"
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            placeholder="550"
+                        )}
+                        {selectedShock.available_adjustments
+                          .has_ramp_chamber && (
+                          <AdjustmentInput
+                            label="Ramp Chamber (PSI)"
                             value={formData.shock_ramp_chamber_pressure}
-                            onChange={(e) =>
+                            onChange={(v) =>
                               setFormData({
                                 ...formData,
-                                shock_ramp_chamber_pressure: e.target.value,
+                                shock_ramp_chamber_pressure: v,
                               })
                             }
+                            id="shock_ramp_chamber_pressure"
+                            step={1}
+                            unit="PSI"
                           />
-                        </div>
-                      )}
-                      {selectedShock.available_adjustments.volume_spacers && (
-                        <div className="space-y-2">
-                          <Label htmlFor="shock_volume_spacers">
-                            Volume Spacers
-                          </Label>
-                          <Input
-                            id="shock_volume_spacers"
-                            type="number"
-                            min="0"
-                            placeholder="1"
+                        )}
+                        {selectedShock.available_adjustments.volume_spacers && (
+                          <AdjustmentInput
+                            label="Volume Spacers"
                             value={formData.shock_volume_spacers}
-                            onChange={(e) =>
+                            onChange={(v) =>
                               setFormData({
                                 ...formData,
-                                shock_volume_spacers: e.target.value,
+                                shock_volume_spacers: v,
                               })
                             }
+                            id="shock_volume_spacers"
+                            step={1}
                           />
-                        </div>
-                      )}
-                      {selectedShock.available_adjustments.spring_rate && (
-                        <div className="space-y-2">
-                          <Label htmlFor="shock_spring_rate">
-                            Spring Rate (lb/in)
-                          </Label>
-                          <Input
-                            id="shock_spring_rate"
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            placeholder="550"
+                        )}
+                        {selectedShock.available_adjustments.spring_rate && (
+                          <AdjustmentInput
+                            label="Spring Rate (lb/in)"
                             value={formData.shock_spring_rate}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                shock_spring_rate: e.target.value,
-                              })
+                            onChange={(v) =>
+                              setFormData({ ...formData, shock_spring_rate: v })
                             }
+                            id="shock_spring_rate"
+                            step={0.01}
+                            unit="lb/in"
                           />
-                        </div>
-                      )}
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Damper Adjustments - Right side */}
+                    <div className="space-y-4">
+                      <h5 className="text-sm font-medium text-muted-foreground">
+                        Damper Adjustments
+                      </h5>
+                      <div className="space-y-4">
+                        {selectedShock.available_adjustments.hsc &&
+                        selectedShock.available_adjustments.lsc ? (
+                          <div className="grid grid-cols-2 gap-3">
+                            <AdjustmentInput
+                              label="HSC (clicks)"
+                              value={formData.shock_hsc}
+                              onChange={(v) =>
+                                setFormData({ ...formData, shock_hsc: v })
+                              }
+                              id="shock_hsc"
+                              step={1}
+                            />
+                            <AdjustmentInput
+                              label="LSC (clicks)"
+                              value={formData.shock_lsc}
+                              onChange={(v) =>
+                                setFormData({ ...formData, shock_lsc: v })
+                              }
+                              id="shock_lsc"
+                              step={1}
+                            />
+                          </div>
+                        ) : selectedShock.available_adjustments.compression ? (
+                          <AdjustmentInput
+                            label="Compression (clicks)"
+                            value={formData.shock_compression}
+                            onChange={(v) =>
+                              setFormData({ ...formData, shock_compression: v })
+                            }
+                            id="shock_compression"
+                            step={1}
+                          />
+                        ) : null}
+
+                        {selectedShock.available_adjustments.hsr &&
+                        selectedShock.available_adjustments.lsr ? (
+                          <div className="grid grid-cols-2 gap-3">
+                            <AdjustmentInput
+                              label="HSR (clicks)"
+                              value={formData.shock_hsr}
+                              onChange={(v) =>
+                                setFormData({ ...formData, shock_hsr: v })
+                              }
+                              id="shock_hsr"
+                              step={1}
+                            />
+                            <AdjustmentInput
+                              label="LSR (clicks)"
+                              value={formData.shock_lsr}
+                              onChange={(v) =>
+                                setFormData({ ...formData, shock_lsr: v })
+                              }
+                              id="shock_lsr"
+                              step={1}
+                            />
+                          </div>
+                        ) : selectedShock.available_adjustments.rebound ? (
+                          <AdjustmentInput
+                            label="Rebound (clicks)"
+                            value={formData.shock_rebound}
+                            onChange={(v) =>
+                              setFormData({ ...formData, shock_rebound: v })
+                            }
+                            id="shock_rebound"
+                            step={1}
+                          />
+                        ) : null}
+                      </div>
                     </div>
                   </div>
 
@@ -1161,7 +1058,6 @@ export function SetupForm({
                     <Textarea
                       id="shock_notes"
                       placeholder="Additional shock settings or observations..."
-                      rows={3}
                       value={formData.shock_notes}
                       onChange={(e) =>
                         setFormData({
@@ -1169,6 +1065,7 @@ export function SetupForm({
                           shock_notes: e.target.value,
                         })
                       }
+                      rows={3}
                     />
                   </div>
                 </div>
