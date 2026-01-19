@@ -442,7 +442,6 @@ export function SetupForm({
           shockExpanded && formData.shock_air_pressure
             ? Number.parseFloat(formData.shock_air_pressure)
             : null,
-        // Fixed field name to match database
         shock_ramp_chamber_pressure:
           shockExpanded && formData.shock_ramp_chamber_pressure
             ? Number.parseFloat(formData.shock_ramp_chamber_pressure)
