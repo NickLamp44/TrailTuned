@@ -10,7 +10,6 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Trail Tuned - Track Your Suspension Settings",
   description: "Track fork and shock settings for all your mountain bikes in one place",
-  generator: "v0.app",
   icons: {
     icon: [
       {

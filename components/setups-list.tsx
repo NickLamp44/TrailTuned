@@ -5,19 +5,23 @@ import { Button } from "@/components/ui/button";
 import { Plus, Settings, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
 interface Setup {
   id: string;
   setup_name: string;
-  fork_brand: string | null;
-  fork_model: string | null;
-  shock_brand: string | null;
-  shock_model: string | null;
+  fork_component_id: string | null;
+  shock_component_id: string | null;
   notes: string | null;
   created_at: string;
+}
+
+interface SuspensionComponent {
+  brand: string;
+  model: string;
+  year: number;
 }
 
 interface SetupsListProps {
@@ -27,8 +31,41 @@ interface SetupsListProps {
 
 export function SetupsList({ bikeId, setups }: SetupsListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [components, setComponents] = useState<
+    Record<string, SuspensionComponent>
+  >({});
   const router = useRouter();
   const supabase = createBrowserClient();
+
+  useEffect(() => {
+    const fetchComponents = async () => {
+      const componentIds = [
+        ...setups.map((s) => s.fork_component_id).filter(Boolean),
+        ...setups.map((s) => s.shock_component_id).filter(Boolean),
+      ];
+
+      if (componentIds.length === 0) return;
+
+      const { data, error } = await supabase
+        .from("suspension_components")
+        .select("id, brand, model, year")
+        .in("id", componentIds);
+
+      if (!error && data) {
+        const componentMap = data.reduce((acc, component) => {
+          acc[component.id] = {
+            brand: component.brand,
+            model: component.model,
+            year: component.year,
+          };
+          return acc;
+        }, {} as Record<string, SuspensionComponent>);
+        setComponents(componentMap);
+      }
+    };
+
+    fetchComponents();
+  }, [setups, supabase]);
 
   const handleDelete = async (setupId: string, setupName: string) => {
     if (!confirm(`Are you sure you want to delete "${setupName}"?`)) {
@@ -52,6 +89,13 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const getComponentDisplay = (componentId: string | null) => {
+    if (!componentId) return "Not configured";
+    const component = components[componentId];
+    if (!component) return "Loading...";
+    return `${component.brand} ${component.model}`;
   };
 
   return (
@@ -113,27 +157,15 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <h4 className="font-semibold mb-2">Fork</h4>
-                    {setup.fork_brand && setup.fork_model ? (
-                      <p className="text-sm text-muted-foreground">
-                        {setup.fork_brand} {setup.fork_model}
-                      </p>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">
-                        Not configured
-                      </p>
-                    )}
+                    <p className="text-sm text-muted-foreground">
+                      {getComponentDisplay(setup.fork_component_id)}
+                    </p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Shock</h4>
-                    {setup.shock_brand && setup.shock_model ? (
-                      <p className="text-sm text-muted-foreground">
-                        {setup.shock_brand} {setup.shock_model}
-                      </p>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">
-                        Not configured
-                      </p>
-                    )}
+                    <p className="text-sm text-muted-foreground">
+                      {getComponentDisplay(setup.shock_component_id)}
+                    </p>
                   </div>
                 </div>
                 {setup.notes && (

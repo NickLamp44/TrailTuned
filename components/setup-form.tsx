@@ -28,8 +28,9 @@ interface SetupFormProps {
 
 interface SetupData {
   setup_name: string;
+
+  //fork setup data
   fork_component_id: string | null;
-  shock_component_id: string | null;
   fork_hsc: string;
   fork_lsc: string;
   fork_hsr: string;
@@ -37,10 +38,13 @@ interface SetupData {
   fork_compression: string;
   fork_rebound: string;
   fork_air_pressure: string;
-  fork_ramp_chamber_pressure: string; // Fixed to match database schema
+  fork_ramp_chamber_pressure: string;
   fork_volume_spacers: string;
   fork_spring_rate: string;
   fork_notes: string;
+
+  //shock setup data
+  shock_component_id: string | null;
   shock_hsc: string;
   shock_lsc: string;
   shock_hsr: string;
@@ -48,7 +52,8 @@ interface SetupData {
   shock_compression: string;
   shock_rebound: string;
   shock_air_pressure: string;
-  shock_ramp_chamber_pressure: string; // Fixed to match database schema
+  shock_hbo: string;
+  shock_ramp_chamber_pressure: string;
   shock_volume_spacers: string;
   shock_spring_rate: string;
   shock_notes: string;
@@ -75,14 +80,17 @@ interface SuspensionComponent {
     volume_spacers: boolean;
     spring_rate: boolean;
     has_ramp_chamber: boolean;
+    has_hbo: boolean;
   };
 }
 
 const normalizeSetupData = (data: any): SetupData => {
   return {
     setup_name: data?.setup_name || "",
+
+    //fork data
     fork_component_id: data?.fork_component_id || null,
-    shock_component_id: data?.shock_component_id || null,
+
     fork_hsc: data?.fork_hsc?.toString() || "",
     fork_lsc: data?.fork_lsc?.toString() || "",
     fork_hsr: data?.fork_hsr?.toString() || "",
@@ -95,6 +103,10 @@ const normalizeSetupData = (data: any): SetupData => {
     fork_volume_spacers: data?.fork_volume_spacers?.toString() || "",
     fork_spring_rate: data?.fork_spring_rate?.toString() || "",
     fork_notes: data?.fork_notes || "",
+
+
+    //shock data
+    shock_component_id: data?.shock_component_id || null,
     shock_hsc: data?.shock_hsc?.toString() || "",
     shock_lsc: data?.shock_lsc?.toString() || "",
     shock_hsr: data?.shock_hsr?.toString() || "",
@@ -102,6 +114,7 @@ const normalizeSetupData = (data: any): SetupData => {
     shock_compression: data?.shock_compression?.toString() || "",
     shock_rebound: data?.shock_rebound?.toString() || "",
     shock_air_pressure: data?.shock_air_pressure?.toString() || "",
+    shock_hbo:data?.shock_hbo?.toString() || "",
     shock_ramp_chamber_pressure:
       data?.shock_ramp_chamber_pressure?.toString() || "",
     shock_volume_spacers: data?.shock_volume_spacers?.toString() || "",
@@ -400,7 +413,6 @@ export function SetupForm({
           forkExpanded && formData.fork_air_pressure
             ? Number.parseFloat(formData.fork_air_pressure)
             : null,
-        // Fixed field name to match database
         fork_ramp_chamber_pressure:
           forkExpanded && formData.fork_ramp_chamber_pressure
             ? Number.parseFloat(formData.fork_ramp_chamber_pressure)
@@ -442,9 +454,9 @@ export function SetupForm({
           shockExpanded && formData.shock_air_pressure
             ? Number.parseFloat(formData.shock_air_pressure)
             : null,
-        shock_ramp_chamber_pressure:
-          shockExpanded && formData.shock_ramp_chamber_pressure
-            ? Number.parseFloat(formData.shock_ramp_chamber_pressure)
+        shock_hbo:
+          shockExpanded && formData.shock_hbo
+            ? Number.parseFloat(formData.shock_hbo)
             : null,
         shock_volume_spacers:
           shockExpanded && formData.shock_volume_spacers
@@ -724,7 +736,7 @@ export function SetupForm({
                         selectedFork.available_adjustments.lsc ? (
                           <div className="grid grid-cols-2 gap-3">
                             <AdjustmentInput
-                              label="HSC (clicks)"
+                              label="High Speed Compression"
                               value={formData.fork_hsc}
                               onChange={(v) =>
                                 setFormData({ ...formData, fork_hsc: v })
@@ -733,7 +745,7 @@ export function SetupForm({
                               step={1}
                             />
                             <AdjustmentInput
-                              label="LSC (clicks)"
+                              label="Low Speed Compression"
                               value={formData.fork_lsc}
                               onChange={(v) =>
                                 setFormData({ ...formData, fork_lsc: v })
@@ -744,7 +756,7 @@ export function SetupForm({
                           </div>
                         ) : selectedFork.available_adjustments.compression ? (
                           <AdjustmentInput
-                            label="Compression (clicks)"
+                            label="Compression "
                             value={formData.fork_compression}
                             onChange={(v) =>
                               setFormData({ ...formData, fork_compression: v })
@@ -758,7 +770,7 @@ export function SetupForm({
                         selectedFork.available_adjustments.lsr ? (
                           <div className="grid grid-cols-2 gap-3">
                             <AdjustmentInput
-                              label="HSR (clicks)"
+                              label="High Speed Rebound"
                               value={formData.fork_hsr}
                               onChange={(v) =>
                                 setFormData({ ...formData, fork_hsr: v })
@@ -767,7 +779,7 @@ export function SetupForm({
                               step={1}
                             />
                             <AdjustmentInput
-                              label="LSR (clicks)"
+                              label="Low Speed Rebound"
                               value={formData.fork_lsr}
                               onChange={(v) =>
                                 setFormData({ ...formData, fork_lsr: v })
@@ -778,7 +790,7 @@ export function SetupForm({
                           </div>
                         ) : selectedFork.available_adjustments.rebound ? (
                           <AdjustmentInput
-                            label="Rebound (clicks)"
+                            label="Rebound"
                             value={formData.fork_rebound}
                             onChange={(v) =>
                               setFormData({ ...formData, fork_rebound: v })
@@ -931,19 +943,18 @@ export function SetupForm({
                           />
                         )}
                         {selectedShock.available_adjustments
-                          .has_ramp_chamber && (
+                          .has_hbo && (
                           <AdjustmentInput
-                            label="Ramp Chamber (PSI)"
-                            value={formData.shock_ramp_chamber_pressure}
+                            label="Hydraulic Bottom Out (HBO)"
+                            value={formData.shock_hbo}
                             onChange={(v) =>
                               setFormData({
                                 ...formData,
-                                shock_ramp_chamber_pressure: v,
+                                shock_hbo: v,
                               })
                             }
-                            id="shock_ramp_chamber_pressure"
+                            id="shock_hbo"
                             step={1}
-                            unit="PSI"
                           />
                         )}
                         {selectedShock.available_adjustments.volume_spacers && (
@@ -985,7 +996,7 @@ export function SetupForm({
                         selectedShock.available_adjustments.lsc ? (
                           <div className="grid grid-cols-2 gap-3">
                             <AdjustmentInput
-                              label="HSC (clicks)"
+                              label="High Speed Compression"
                               value={formData.shock_hsc}
                               onChange={(v) =>
                                 setFormData({ ...formData, shock_hsc: v })
@@ -994,7 +1005,7 @@ export function SetupForm({
                               step={1}
                             />
                             <AdjustmentInput
-                              label="LSC (clicks)"
+                              label="Low Speed Compression"
                               value={formData.shock_lsc}
                               onChange={(v) =>
                                 setFormData({ ...formData, shock_lsc: v })
@@ -1005,7 +1016,7 @@ export function SetupForm({
                           </div>
                         ) : selectedShock.available_adjustments.compression ? (
                           <AdjustmentInput
-                            label="Compression (clicks)"
+                            label="Compression"
                             value={formData.shock_compression}
                             onChange={(v) =>
                               setFormData({ ...formData, shock_compression: v })
@@ -1019,7 +1030,7 @@ export function SetupForm({
                         selectedShock.available_adjustments.lsr ? (
                           <div className="grid grid-cols-2 gap-3">
                             <AdjustmentInput
-                              label="HSR (clicks)"
+                              label="High Speed Rebound"
                               value={formData.shock_hsr}
                               onChange={(v) =>
                                 setFormData({ ...formData, shock_hsr: v })
@@ -1028,7 +1039,7 @@ export function SetupForm({
                               step={1}
                             />
                             <AdjustmentInput
-                              label="LSR (clicks)"
+                              label="Low Speed Rebound"
                               value={formData.shock_lsr}
                               onChange={(v) =>
                                 setFormData({ ...formData, shock_lsr: v })
@@ -1039,7 +1050,7 @@ export function SetupForm({
                           </div>
                         ) : selectedShock.available_adjustments.rebound ? (
                           <AdjustmentInput
-                            label="Rebound (clicks)"
+                            label="Rebound"
                             value={formData.shock_rebound}
                             onChange={(v) =>
                               setFormData({ ...formData, shock_rebound: v })

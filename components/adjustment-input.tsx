@@ -40,7 +40,7 @@ export function AdjustmentInput({
       <Label htmlFor={id} className="text-sm">
         {label}
       </Label>
-      {/* Vertical button stack on the right */}
+      
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2">
           <Input

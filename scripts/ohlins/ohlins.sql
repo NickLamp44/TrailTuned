@@ -1,12 +1,12 @@
--- Add ramp chamber support for forks (second air chamber)
--- This migration adds columns for tracking ramp chamber pressure and updates component data
+-- Ohlins suspension components migration
+-- Adds complete Ohlins fork and shock product lineup with ramp chamber support
 
--- Add ramp chamber columns to suspension_setups table
+-- Add ramp chamber pressure columns for both forks and shocks if they don't exist
 ALTER TABLE public.suspension_setups 
-ADD COLUMN IF NOT EXISTS fork_ramp_chamber_pressure INTEGER; 
+ADD COLUMN IF NOT EXISTS shock_ramp_chamber_pressure INTEGER;
 
-TRUNCATE TABLE public.suspension_components;
-
+-- Delete existing Ohlins data to avoid duplicates (preserves other brands)
+DELETE FROM public.suspension_components WHERE brand = 'Ohlins';
 
 INSERT INTO public.suspension_components (component_type, brand, model, year, spring_type, damper_name, available_adjustments) VALUES
 
@@ -23,7 +23,6 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
@@ -37,13 +36,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'RXF36 M.2', 2024, 'air', 'TTX Air', 
 '{
     "compression": false,
@@ -52,13 +49,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'RXF36 M.2', 2023,  'air', 'TTX Air', 
 '{
     "compression": false,
@@ -67,7 +62,6 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
@@ -83,13 +77,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false,  
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'RXF38 M.2', 2025, 'air', 'TTX Air', 
 '{
     "compression": false,
@@ -98,13 +90,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'RXF38 M.2', 2024, 'air', 'TTX Air', 
 '{
    "compression": false,
@@ -113,13 +103,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'RXF38 M.2', 2023, 'air', 'TTX Air', 
 '{
     "compression": false,
@@ -128,14 +116,13 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false,  
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
 
--- Ohlins RXC34 (XC Fork) - No ramp chamber
+-- Ohlins RXC34 (XC Fork) - With ramp chamber
 ('fork', 'Ohlins', 'RXC34 M.2', 2026, 'air', 'TTX Air', 
 '{
     "compression": false,
@@ -144,13 +131,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'RXC34 M.2', 2025, 'air', 'TTX Air', 
 '{
    "compression": false,
@@ -159,13 +144,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false,  
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'RXC34 M.2', 2024, 'air', 'TTX Air', 
 '{
     "compression": false,
@@ -174,7 +157,6 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
@@ -190,13 +172,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'DH38 M.2', 2025, 'air', 'TTX', 
 '{
     "compression": false,
@@ -205,13 +185,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('fork', 'Ohlins', 'DH38 M.2', 2024, 'air', 'TTX', 
 '{
     "compression": false,
@@ -220,7 +198,6 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
@@ -231,7 +208,7 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
 -- OHLINS SHOCKS
 -- ========================================
 
--- Ohlins TTX Trail/Enduro Shock
+-- Ohlins TTX2 Trail/Enduro Shock (Air)
 ('shock', 'Ohlins', 'TTX2 Air', 2026, 'air', 'TTX', 
 '{
     "compression": false,
@@ -240,13 +217,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TTX2 Air', 2025, 'air', 'TTX', 
 '{
     "compression": false,
@@ -255,13 +230,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TTX2 Air', 2024, 'air', 'TTX', 
 '{
     "compression": false,
@@ -270,13 +243,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TTX2 Air', 2023, 'air', 'TTX', 
 '{
     "compression": false,
@@ -285,13 +256,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TTX1 Air', 2022, 'air', 'TTX',
 '{
     "compression": false,
@@ -300,14 +269,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
-
 
 -- Ohlins TTX Coil (DH/Enduro)
 ('shock', 'Ohlins', 'TTX Coil', 2026, 'coil', 'TTX',
@@ -318,13 +284,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false,
-
-    "air_pressure": true, 
-    "volume_spacers": true, 
-    "spring_rate": false, 
+    "air_pressure": false, 
+    "volume_spacers": false, 
+    "spring_rate": true, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TTX Coil', 2025, 'coil', 'TTX', 
 '{
      "compression": false,
@@ -333,13 +297,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
-    "air_pressure": true, 
-    "volume_spacers": true, 
-    "spring_rate": false, 
+    "air_pressure": false, 
+    "volume_spacers": false, 
+    "spring_rate": true, 
     "has_ramp_chamber": true,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TTX Coil', 2024, 'coil', 'TTX', 
 '{
      "compression": false,
@@ -348,14 +310,13 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false,
-
     "air_pressure": false, 
     "volume_spacers": false, 
     "spring_rate": true, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
 
--- Ohlins TXC XC Shock
+-- Ohlins TXC2 XC Shock
 ('shock', 'Ohlins', 'TXC2 Air', 2026, 'air', 'TTX', 
 '{
      "compression": false,
@@ -364,13 +325,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false,
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TXC2 Air', 2025, 'air', 'TTX', 
 '{
     "compression": false,
@@ -379,13 +338,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TXC2 Air', 2024, 'air', 'TTX', 
 '{
     "compression": false,
@@ -394,13 +351,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TXC2 Air', 2023, 'air', 'TTX', 
 '{
     "compression": false,
@@ -409,13 +364,11 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
     "other_adjustments": []}'),
-
 ('shock', 'Ohlins', 'TXC1 Air', 2022, 'air', 'TTX',
 '{
     "compression": false,
@@ -424,10 +377,10 @@ INSERT INTO public.suspension_components (component_type, brand, model, year, sp
     "rebound": true, 
     "hsr": false, 
     "lsr": false, 
-
     "air_pressure": true, 
     "volume_spacers": true, 
     "spring_rate": false, 
     "has_ramp_chamber": false,  
-    "other_adjustments": []}'),
+    "other_adjustments": []}');
 
+COMMIT;
