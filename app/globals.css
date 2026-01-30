@@ -1,9 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* ======================================================
-   Core Design Tokens (Single Dark Theme)
-   ====================================================== */
+
 :root {
   --background: oklch(0.08 0.01 140);
   --foreground: oklch(0.95 0.01 120);
@@ -30,9 +28,6 @@
   --input: oklch(0.14 0.015 140);
 }
 
-/* ======================================================
-   Tailwind Theme Mapping
-   ====================================================== */
 @theme inline {
   --font-sans: "Geist", system-ui, sans-serif;
   --font-mono: "Geist Mono", monospace;
@@ -55,9 +50,7 @@
   --color-input: var(--input);
 }
 
-/* ======================================================
-   Base Styles
-   ====================================================== */
+
 @layer base {
   * {
     @apply border-border;
