@@ -40,43 +40,50 @@ export function AdjustmentInput({
       <Label htmlFor={id} className="text-sm">
         {label}
       </Label>
-      
+
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2">
+        {/* Decrement */}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleDecrement}
+          className="h-10 w-10 p-0 flex-shrink-0 glass-interactive border-white/10 hover:border-accent/50 bg-transparent"
+        >
+          <ChevronDown className="h-5 w-5" />
+        </Button>
+
+        <div className="relative">
           <Input
             id={id}
             type="number"
             min={min}
             step={step}
-            placeholder="0"
             value={value}
+            placeholder="0"
             onChange={(e) => onChange(e.target.value)}
-            className="h-10 w-16 text-center flex-shrink-0 glass border-white/10 bg-white/5 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className={`h-10 w-20 glass border-white/10 bg-white/5 text-center ${
+              unit ? "pr-8" : "px-3"
+            } [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
           />
+
           {unit && (
-            <span className="text-xs text-muted-foreground ml-1">{unit}</span>
+            <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+              {unit}
+            </span>
           )}
         </div>
-        <div className="flex flex-col gap-1">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleIncrement}
-            className="h-10 w-10 p-0 flex-shrink-0 glass-interactive border-white/10 hover:border-accent/50 bg-transparent"
-          >
-            <ChevronUp className="h-5 w-5" />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleDecrement}
-            className="h-10 w-10 p-0 flex-shrink-0 glass-interactive border-white/10 hover:border-accent/50 bg-transparent"
-          >
-            <ChevronDown className="h-5 w-5" />
-          </Button>
-        </div>
+
+        {/* Increment */}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleIncrement}
+          className="h-10 w-10 p-0 flex-shrink-0 glass-interactive border-white/10 hover:border-accent/50 bg-transparent"
+        >
+          <ChevronUp className="h-5 w-5" />
+        </Button>
       </div>
     </div>
   );

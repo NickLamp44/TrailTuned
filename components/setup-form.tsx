@@ -511,7 +511,7 @@ export function SetupForm({
       fork_compression: "",
       fork_rebound: "",
       fork_air_pressure: "",
-      fork_ramp_chamber_pressure: "", // Fixed field name
+      fork_ramp_chamber_pressure: "", 
       fork_volume_spacers: "",
       fork_spring_rate: "",
       fork_notes: "",
@@ -534,7 +534,7 @@ export function SetupForm({
       shock_compression: "",
       shock_rebound: "",
       shock_air_pressure: "",
-      shock_ramp_chamber_pressure: "", // Fixed field name
+      shock_ramp_chamber_pressure: "", 
       shock_volume_spacers: "",
       shock_spring_rate: "",
       shock_notes: "",
@@ -549,7 +549,6 @@ export function SetupForm({
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <Label htmlFor="setup_name">Name</Label>
             <Input
               id="setup_name"
               placeholder="e.g., Park Setup, XC Race, All Mountain"
@@ -670,7 +669,7 @@ export function SetupForm({
                       <div className="space-y-3">
                         {selectedFork.available_adjustments.air_pressure && (
                           <AdjustmentInput
-                            label="Air Pressure (PSI)"
+                            label="Air Pressure"
                             value={formData.fork_air_pressure}
                             onChange={(v) =>
                               setFormData({ ...formData, fork_air_pressure: v })
@@ -683,7 +682,7 @@ export function SetupForm({
                         {selectedFork.available_adjustments
                           .has_ramp_chamber && (
                           <AdjustmentInput
-                            label="Ramp Chamber (PSI)"
+                            label="Ramp Chamber"
                             value={formData.fork_ramp_chamber_pressure}
                             onChange={(v) =>
                               setFormData({
@@ -929,7 +928,7 @@ export function SetupForm({
                       <div className="space-y-3">
                         {selectedShock.available_adjustments.air_pressure && (
                           <AdjustmentInput
-                            label="Air Pressure (PSI)"
+                            label="Air Pressure"
                             value={formData.shock_air_pressure}
                             onChange={(v) =>
                               setFormData({
