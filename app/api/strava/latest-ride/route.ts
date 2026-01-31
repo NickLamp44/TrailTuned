@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "No rides found" }, { status: 404 });
     }
 
-    console.log("[v0] Latest ride:", {
+    console.log("Latest ride:", {
       id: ride.id,
       name: ride.activity_name,
       hasPolyline: !!ride.polyline,
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ ride });
   } catch (error) {
-    console.error("[v0] Error fetching latest ride:", error);
+    console.error("Error fetching latest ride:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to fetch latest ride";
     return NextResponse.json({ error: errorMessage }, { status: 500 });

@@ -54,7 +54,7 @@ export function RecentRideWidget({ userId }: RecentRideWidgetProps) {
         setRide(data.ride);
       }
     } catch (err) {
-      console.error("[v0] Error fetching latest ride:", err);
+      console.error("Error fetching latest ride:", err);
       setError(
         err instanceof Error ? err.message : "Failed to fetch latest ride"
       );
@@ -192,12 +192,6 @@ export function RecentRideWidget({ userId }: RecentRideWidgetProps) {
             </div>
           )}
         </div>
-
-        <Link href="/dashboard/rides" className="w-full">
-          <Button variant="outline" size="sm" className="w-full bg-transparent">
-            View All Rides
-          </Button>
-        </Link>
       </CardContent>
     </Card>
   );

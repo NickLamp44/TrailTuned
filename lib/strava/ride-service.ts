@@ -2,9 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { stravaService } from "./service";
 
 export class StravaRideService {
-  /**
-   * Fetch and cache Strava rides for a user
-   */
+  
   async syncUserRides(userId: string) {
     try {
       const accessToken = await stravaService.getValidAccessToken(userId);
@@ -14,29 +12,27 @@ export class StravaRideService {
 
       const supabase = await createClient();
 
-      // Filter for mountain bike rides only
       const mtbActivities = activities.filter((activity) =>
         ["Ride", "MountainBikeRide"].includes(activity.type)
       );
 
-      // Fetch full activity details for each ride to get polyline
-      // Add delay between requests to avoid Strava rate limiting
+      
       for (let i = 0; i < mtbActivities.length; i++) {
         const activity = mtbActivities[i];
         try {
-          // Add delay before fetching to avoid rate limits (150ms between requests)
+          
           if (i > 0) {
             await new Promise((resolve) => setTimeout(resolve, 150));
           }
 
-          // Fetch full activity details which includes polyline
+          
           const fullActivity = await stravaService.getActivity(
             accessToken,
             activity.id
           );
 
           console.log(
-            `[v0] Syncing activity ${
+            `Syncing activity ${
               activity.id
             }, has polyline: ${!!fullActivity.map?.summary_polyline}`
           );
@@ -65,36 +61,33 @@ export class StravaRideService {
               ? activityError.message
               : String(activityError);
 
-          // If rate limited, stop syncing to avoid further rate limiting
+          
           if (
             errorMsg.includes("Too Many Requests") ||
             errorMsg.includes("429")
           ) {
-            console.log("[v0] Strava rate limit reached, stopping sync");
+            console.log("Strava rate limit reached, stopping sync");
             break;
           }
 
           console.error(
-            `[v0] Error fetching details for activity ${activity.id}:`,
+            `Error fetching details for activity ${activity.id}:`,
             activityError
           );
-          // Continue with next activity for other errors
         }
       }
 
       console.log(
-        `[v0] Synced ${mtbActivities.length} mountain bike rides for user ${userId}`
+        `Synced ${mtbActivities.length} rides for user ${userId}`
       );
       return mtbActivities.length;
     } catch (error) {
-      console.error("[v0] Error syncing Strava rides:", error);
+      console.error("Error syncing Strava rides:", error);
       throw error;
     }
   }
 
-  /**
-   * Get the most recent mountain bike ride for a user
-   */
+ 
   async getLatestRide(userId: string) {
     const supabase = await createClient();
 
@@ -114,9 +107,7 @@ export class StravaRideService {
     return data || null;
   }
 
-  /**
-   * Get all rides for a user with optional filters
-   */
+
   async getUserRides(
     userId: string,
     options?: {
@@ -153,9 +144,7 @@ export class StravaRideService {
     return { rides: data || [], total: count || 0 };
   }
 
-  /**
-   * Link a Strava ride to a suspension setup
-   */
+
   async linkRideToSetup(rideId: string, setupId: string, bikeId: string) {
     const supabase = await createClient();
 
@@ -166,12 +155,10 @@ export class StravaRideService {
 
     if (error) throw error;
 
-    console.log(`[v0] Linked ride ${rideId} to setup ${setupId}`);
+    console.log(`Linked ride ${rideId} to setup ${setupId}`);
   }
 
-  /**
-   * Unlink a Strava ride from a setup
-   */
+  
   async unlinkRideFromSetup(rideId: string) {
     const supabase = await createClient();
 
@@ -182,12 +169,10 @@ export class StravaRideService {
 
     if (error) throw error;
 
-    console.log(`[v0] Unlinked ride ${rideId}`);
+    console.log(`Unlinked ride ${rideId}`);
   }
 
-  /**
-   * Check if user has Strava account connected
-   */
+ 
   async isConnected(userId: string): Promise<boolean> {
     try {
       await stravaService.getTokens(userId);
@@ -197,19 +182,14 @@ export class StravaRideService {
     }
   }
 
-  /**
-   * Disconnect Strava account and clear cached rides
-   */
   async disconnectAccount(userId: string) {
     const supabase = await createClient();
 
-    // Delete all cached rides for this user
     await supabase.from("strava_rides").delete().eq("user_id", userId);
 
-    // Delete tokens
     await stravaService.disconnectAccount(userId);
 
-    console.log(`[v0] Disconnected Strava account for user ${userId}`);
+    console.log(`Disconnected Strava account for user ${userId}`);
   }
 }
 

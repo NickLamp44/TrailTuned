@@ -29,7 +29,7 @@ export class SessionService {
 
     if (error) throw error;
 
-    console.log(`[v0] Activated setup ${setupId} for user ${userId}`);
+    console.log(`Activated setup ${setupId} for user ${userId}`);
     return data;
   }
 
@@ -47,7 +47,7 @@ export class SessionService {
 
     if (error) throw error;
 
-    console.log(`[v0] Deactivated session for user ${userId}`);
+    console.log(`Deactivated for user ${userId}`);
   }
 
   /**
@@ -71,18 +71,15 @@ export class SessionService {
     return data || null;
   }
 
-  /**
-   * Sync rides and auto-link to active session
-   */
+ 
   async syncAndLinkRides(userId: string) {
     try {
-      // Sync new rides from Strava
       await stravaRideService.syncUserRides(userId);
 
-      // Get active session
+  
       const activeSession = await this.getActiveSession(userId);
       if (!activeSession) {
-        console.log(`[v0] No active session for user ${userId}`);
+        console.log(`No active session for user ${userId}`);
         return;
       }
 
@@ -118,10 +115,10 @@ export class SessionService {
       }
 
       console.log(
-        `[v0] Synced and linked rides for user ${userId} to setup ${activeSession.setup_id}`
+        `Synced and linked rides for user ${userId} to setup ${activeSession.setup_id}`
       );
     } catch (error) {
-      console.error("[v0] Error syncing and linking rides:", error);
+      console.error("Error syncing and linking rides:", error);
       throw error;
     }
   }

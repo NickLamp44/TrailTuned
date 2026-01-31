@@ -138,7 +138,7 @@ export function ActivityMap({ polyline, height = "h-64" }: ActivityMapProps) {
       setStartPoint(startProjected);
       setEndPoint(endProjected);
     } catch (error) {
-      console.error("[v0] Error decoding polyline:", error);
+      console.error("Error decoding polyline:", error);
     }
   }, [polyline]);
 

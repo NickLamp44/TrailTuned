@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       await stravaRideService.syncUserRides(user.id);
     } catch (error) {
       console.error("Error syncing Strava rides:", error);
-      // Continue anyway, they may have cached rides
+     
     }
 
     const { rides, total } = await stravaRideService.getUserRides(user.id, {

@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       count: syncedCount,
     });
   } catch (error) {
-    console.error("[v0] Error refreshing rides:", error);
+    console.error("Error refreshing rides:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to refresh rides";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
