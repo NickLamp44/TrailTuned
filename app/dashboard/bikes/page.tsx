@@ -3,9 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { BikesList } from "@/components/bikes-list";
 import { AllSetupsList } from "@/components/all-setups-list";
-import { RecentRideWidget } from "@/components/recent-ride-widget";
 
-export default async function DashboardPage() {
+export default async function BikesPage() {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getUser();
@@ -31,27 +30,21 @@ export default async function DashboardPage() {
     <DashboardShell user={data.user}>
       <div className="space-y-8">
         <div className="grid gap-8 lg:grid-cols-1">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Your Recent Rides
-          </h2>
-          <div className="lg:col-span-2">
-            <RecentRideWidget userId={data.user.id} />
-          </div>
-        </div>
-
-
-        <div className="grid gap-8 lg:grid-cols-1">
           <h2 className="text-3xl font-bold tracking-tight">Your Bikes</h2>
           <div className="lg:col-span-2">
             <BikesList bikes={bikes || []} />
           </div>
         </div>
 
-        {setups && setups.length > 0 && (
-          <div>
-            <AllSetupsList setups={setups} />
+        <div className="grid gap-8 lg:grid-cols-1">
+          <div className="lg:col-span-2">
+            {setups && setups.length > 0 && (
+              <div>
+                <AllSetupsList setups={setups} />
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </DashboardShell>
   );
