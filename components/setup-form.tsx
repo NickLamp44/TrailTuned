@@ -53,7 +53,6 @@ interface SetupData {
   shock_rebound: string;
   shock_air_pressure: string;
   shock_hbo: string;
-  shock_ramp_chamber_pressure: string;
   shock_volume_spacers: string;
   shock_spring_rate: string;
   shock_notes: string;
@@ -115,8 +114,6 @@ const normalizeSetupData = (data: any): SetupData => {
     shock_rebound: data?.shock_rebound?.toString() || "",
     shock_air_pressure: data?.shock_air_pressure?.toString() || "",
     shock_hbo:data?.shock_hbo?.toString() || "",
-    shock_ramp_chamber_pressure:
-      data?.shock_ramp_chamber_pressure?.toString() || "",
     shock_volume_spacers: data?.shock_volume_spacers?.toString() || "",
     shock_spring_rate: data?.shock_spring_rate?.toString() || "",
     shock_notes: data?.shock_notes || "",
@@ -533,8 +530,8 @@ export function SetupForm({
       shock_lsr: "",
       shock_compression: "",
       shock_rebound: "",
-      shock_air_pressure: "",
-      shock_ramp_chamber_pressure: "", 
+      shock_hbo:"",
+      shock_air_pressure: "", 
       shock_volume_spacers: "",
       shock_spring_rate: "",
       shock_notes: "",

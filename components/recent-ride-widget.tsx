@@ -167,7 +167,7 @@ export function RecentRideWidget({ userId }: RecentRideWidgetProps) {
                 {Math.round(ride.elevation_gain_m)} m
               </p>
             </div>
-            <div>
+            {/* <div>
               <p className="text-xs text-muted-foreground">Setup</p>
               {ride.suspension_setups?.setup_name ? (
                 <Badge variant="outline" className="text-xs">
@@ -178,7 +178,7 @@ export function RecentRideWidget({ userId }: RecentRideWidgetProps) {
                   Not linked
                 </Badge>
               )}
-            </div>
+            </div> */}
           </div>
 
           {ride.bikes && (
