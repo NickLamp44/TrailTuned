@@ -182,54 +182,62 @@ export function SetupVersionHistory({
                           {version.fork_brand} {version.fork_model}
                         </div>
                         <div className="grid grid-cols-2 gap-1 text-xs">
-                          {version.fork_hsc !== undefined && (
-                            <div>
-                              <span className="font-medium">HSC:</span>{" "}
-                              {version.fork_hsc}
-                            </div>
-                          )}
-                          {version.fork_lsc !== undefined && (
-                            <div>
-                              <span className="font-medium">LSC:</span>{" "}
-                              {version.fork_lsc}
-                            </div>
-                          )}
-                          {version.fork_hsr !== undefined && (
-                            <div>
-                              <span className="font-medium">HSR:</span>{" "}
-                              {version.fork_hsr}
-                            </div>
-                          )}
-                          {version.fork_lsr !== undefined && (
-                            <div>
-                              <span className="font-medium">LSR:</span>{" "}
-                              {version.fork_lsr}
-                            </div>
-                          )}
-                          {version.fork_compression !== undefined && (
-                            <div>
-                              <span className="font-medium">Comp:</span>{" "}
-                              {version.fork_compression}
-                            </div>
-                          )}
-                          {version.fork_rebound !== undefined && (
-                            <div>
-                              <span className="font-medium">Reb:</span>{" "}
-                              {version.fork_rebound}
-                            </div>
-                          )}
-                          {version.fork_air_pressure !== undefined && (
-                            <div>
-                              <span className="font-medium">PSI:</span>{" "}
-                              {version.fork_air_pressure}
-                            </div>
-                          )}
-                          {version.fork_ramp_chamber_pressure !== undefined && (
-                            <div>
-                              <span className="font-medium">Ramp:</span>{" "}
-                              {version.fork_ramp_chamber_pressure}
-                            </div>
-                          )}
+                          {version.fork_hsc !== undefined &&
+                            version.fork_hsc !== null && (
+                              <div>
+                                <span className="font-medium">HSC:</span>{" "}
+                                {version.fork_hsc}
+                              </div>
+                            )}
+                          {version.fork_lsc !== undefined &&
+                            version.fork_lsc !== null && (
+                              <div>
+                                <span className="font-medium">LSC:</span>{" "}
+                                {version.fork_lsc}
+                              </div>
+                            )}
+                          {version.fork_hsr !== undefined &&
+                            version.fork_hsr !== null && (
+                              <div>
+                                <span className="font-medium">HSR:</span>{" "}
+                                {version.fork_hsr}
+                              </div>
+                            )}
+                          {version.fork_lsr !== undefined &&
+                            version.fork_lsr !== null && (
+                              <div>
+                                <span className="font-medium">LSR:</span>{" "}
+                                {version.fork_lsr}
+                              </div>
+                            )}
+                          {version.fork_compression !== undefined &&
+                            version.fork_compression !== null && (
+                              <div>
+                                <span className="font-medium">Comp:</span>{" "}
+                                {version.fork_compression}
+                              </div>
+                            )}
+                          {version.fork_rebound !== undefined &&
+                            version.fork_rebound !== null && (
+                              <div>
+                                <span className="font-medium">Reb:</span>{" "}
+                                {version.fork_rebound}
+                              </div>
+                            )}
+                          {version.fork_air_pressure !== undefined &&
+                            version.fork_air_pressure !== null && (
+                              <div>
+                                <span className="font-medium">PSI:</span>{" "}
+                                {version.fork_air_pressure}
+                              </div>
+                            )}
+                          {version.fork_ramp_chamber_pressure !== undefined &&
+                            version.fork_ramp_chamber_pressure !== null && (
+                              <div>
+                                <span className="font-medium">Ramp:</span>{" "}
+                                {version.fork_ramp_chamber_pressure}
+                              </div>
+                            )}
                         </div>
                       </div>
                     )}
@@ -240,54 +248,62 @@ export function SetupVersionHistory({
                           {version.shock_brand} {version.shock_model}
                         </div>
                         <div className="grid grid-cols-2 gap-1 text-xs">
-                          {version.shock_hsc !== undefined && (
-                            <div>
-                              <span className="font-medium">HSC:</span>{" "}
-                              {version.shock_hsc}
-                            </div>
-                          )}
-                          {version.shock_lsc !== undefined && (
-                            <div>
-                              <span className="font-medium">LSC:</span>{" "}
-                              {version.shock_lsc}
-                            </div>
-                          )}
-                          {version.shock_hsr !== undefined && (
-                            <div>
-                              <span className="font-medium">HSR:</span>{" "}
-                              {version.shock_hsr}
-                            </div>
-                          )}
-                          {version.shock_lsr !== undefined && (
-                            <div>
-                              <span className="font-medium">LSR:</span>{" "}
-                              {version.shock_lsr}
-                            </div>
-                          )}
-                          {version.shock_compression !== undefined && (
-                            <div>
-                              <span className="font-medium">Comp:</span>{" "}
-                              {version.shock_compression}
-                            </div>
-                          )}
-                          {version.shock_rebound !== undefined && (
-                            <div>
-                              <span className="font-medium">Reb:</span>{" "}
-                              {version.shock_rebound}
-                            </div>
-                          )}
-                          {version.shock_air_pressure !== undefined && (
-                            <div>
-                              <span className="font-medium">PSI:</span>{" "}
-                              {version.shock_air_pressure}
-                            </div>
-                          )}
-                          {version.shock_hbo !== undefined && (
-                            <div>
-                              <span className="font-medium">HBO:</span>{" "}
-                              {version.shock_hbo}
-                            </div>
-                          )}
+                          {version.shock_hsc !== undefined &&
+                            version.shock_hsc !== null && (
+                              <div>
+                                <span className="font-medium">HSC:</span>{" "}
+                                {version.shock_hsc}
+                              </div>
+                            )}
+                          {version.shock_lsc !== undefined &&
+                            version.shock_lsc !== null && (
+                              <div>
+                                <span className="font-medium">LSC:</span>{" "}
+                                {version.shock_lsc}
+                              </div>
+                            )}
+                          {version.shock_hsr !== undefined &&
+                            version.shock_hsr !== null && (
+                              <div>
+                                <span className="font-medium">HSR:</span>{" "}
+                                {version.shock_hsr}
+                              </div>
+                            )}
+                          {version.shock_lsr !== undefined &&
+                            version.shock_lsr !== null && (
+                              <div>
+                                <span className="font-medium">LSR:</span>{" "}
+                                {version.shock_lsr}
+                              </div>
+                            )}
+                          {version.shock_compression !== undefined &&
+                            version.shock_compression !== null && (
+                              <div>
+                                <span className="font-medium">Comp:</span>{" "}
+                                {version.shock_compression}
+                              </div>
+                            )}
+                          {version.shock_rebound !== undefined &&
+                            version.shock_rebound !== null && (
+                              <div>
+                                <span className="font-medium">Reb:</span>{" "}
+                                {version.shock_rebound}
+                              </div>
+                            )}
+                          {version.shock_air_pressure !== undefined &&
+                            version.shock_air_pressure !== null && (
+                              <div>
+                                <span className="font-medium">PSI:</span>{" "}
+                                {version.shock_air_pressure}
+                              </div>
+                            )}
+                          {version.shock_hbo !== undefined &&
+                            version.shock_hbo !== null && (
+                              <div>
+                                <span className="font-medium">HBO:</span>{" "}
+                                {version.shock_hbo}
+                              </div>
+                            )}
                         </div>
                       </div>
                     )}

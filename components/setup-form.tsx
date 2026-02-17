@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, X } from "lucide-react";
 import { AdjustmentInput } from "@/components/adjustment-input";
+import { createSetupVersionAction } from "@/app/actions/setup-version-actions";
 
 interface SetupFormProps {
   bikeId: string;
@@ -103,7 +104,6 @@ const normalizeSetupData = (data: any): SetupData => {
     fork_spring_rate: data?.fork_spring_rate?.toString() || "",
     fork_notes: data?.fork_notes || "",
 
-
     //shock data
     shock_component_id: data?.shock_component_id || null,
     shock_hsc: data?.shock_hsc?.toString() || "",
@@ -113,7 +113,7 @@ const normalizeSetupData = (data: any): SetupData => {
     shock_compression: data?.shock_compression?.toString() || "",
     shock_rebound: data?.shock_rebound?.toString() || "",
     shock_air_pressure: data?.shock_air_pressure?.toString() || "",
-    shock_hbo:data?.shock_hbo?.toString() || "",
+    shock_hbo: data?.shock_hbo?.toString() || "",
     shock_volume_spacers: data?.shock_volume_spacers?.toString() || "",
     shock_spring_rate: data?.shock_spring_rate?.toString() || "",
     shock_notes: data?.shock_notes || "",
@@ -381,7 +381,13 @@ export function SetupForm({
         user_id: userId,
         setup_name: formData.setup_name,
         fork_component_id: forkExpanded ? formData.fork_component_id : null,
+        fork_brand: forkExpanded && selectedFork ? selectedFork.brand : null,
+        fork_model: forkExpanded && selectedFork ? selectedFork.model : null,
         shock_component_id: shockExpanded ? formData.shock_component_id : null,
+        shock_brand:
+          shockExpanded && selectedShock ? selectedShock.brand : null,
+        shock_model:
+          shockExpanded && selectedShock ? selectedShock.model : null,
         fork_hsc:
           forkExpanded && formData.fork_hsc
             ? Number.parseInt(formData.fork_hsc)
@@ -477,6 +483,10 @@ export function SetupForm({
           .eq("id", setupId);
 
         if (error) throw error;
+
+        // Create a version record when updating an existing setup
+        console.log(" Creating version for updated setup");
+        await createSetupVersionAction(setupId, userId, setupData);
       } else {
         const { error } = await supabase
           .from("suspension_setups")
@@ -508,7 +518,7 @@ export function SetupForm({
       fork_compression: "",
       fork_rebound: "",
       fork_air_pressure: "",
-      fork_ramp_chamber_pressure: "", 
+      fork_ramp_chamber_pressure: "",
       fork_volume_spacers: "",
       fork_spring_rate: "",
       fork_notes: "",
@@ -530,8 +540,8 @@ export function SetupForm({
       shock_lsr: "",
       shock_compression: "",
       shock_rebound: "",
-      shock_hbo:"",
-      shock_air_pressure: "", 
+      shock_hbo: "",
+      shock_air_pressure: "",
       shock_volume_spacers: "",
       shock_spring_rate: "",
       shock_notes: "",
@@ -938,8 +948,7 @@ export function SetupForm({
                             unit="PSI"
                           />
                         )}
-                        {selectedShock.available_adjustments
-                          .has_hbo && (
+                        {selectedShock.available_adjustments.has_hbo && (
                           <AdjustmentInput
                             label="Hydraulic Bottom Out (HBO)"
                             value={formData.shock_hbo}

@@ -82,7 +82,7 @@ export class SetupVersionService {
 
     if (updateError) throw updateError;
 
-    console.log(`[v0] Created version ${newVersionNumber} of setup ${setupId}`);
+    console.log(`Created version ${newVersionNumber} of setup ${setupId}`);
     return version;
   }
 
@@ -261,7 +261,7 @@ export class SetupVersionService {
     if (updateError) throw updateError;
 
     console.log(
-      `[v0] Restored setup ${setupId} to version ${oldVersion.version_number}`
+      ` Restored setup ${setupId} to version ${oldVersion.version_number}`
     );
     return restoredVersion;
   }
