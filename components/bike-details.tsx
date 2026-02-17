@@ -14,6 +14,7 @@ interface BikeDetailsProps {
     model: string;
     year: number;
     frame_details: string | null;
+    active_setup_id?: string | null;
   };
 }
 
@@ -67,9 +68,18 @@ export function BikeDetails({ bike }: BikeDetailsProps) {
         </div>
       </CardHeader>
       <CardContent>
-        {bike.frame_details && (
-          <p className="text-muted-foreground">{bike.frame_details}</p>
-        )}
+        <div className="space-y-4">
+          {bike.frame_details && (
+            <p className="text-muted-foreground">{bike.frame_details}</p>
+          )}
+          {bike.active_setup_id && (
+            <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
+              <p className="text-xs text-primary font-medium">
+                Active setup set for auto-linking new rides
+              </p>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Settings, Edit, Trash2 } from "lucide-react";
+import { Plus, Settings, Edit, Trash2, History } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -27,10 +27,16 @@ interface SuspensionComponent {
 interface SetupsListProps {
   bikeId: string;
   setups: Setup[];
+  currentBikeActiveSetupId?: string | null;
 }
 
-export function SetupsList({ bikeId, setups }: SetupsListProps) {
+export function SetupsList({
+  bikeId,
+  setups,
+  currentBikeActiveSetupId,
+}: SetupsListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [settingActiveId, setSettingActiveId] = useState<string | null>(null);
   const [components, setComponents] = useState<
     Record<string, SuspensionComponent>
   >({});
@@ -91,6 +97,42 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
     }
   };
 
+  const handleSetActive = async (setupId: string) => {
+    setSettingActiveId(setupId);
+    try {
+      const { error } = await supabase
+        .from("bikes")
+        .update({ active_setup_id: setupId })
+        .eq("id", bikeId);
+
+      if (error) throw error;
+      router.refresh();
+    } catch (error) {
+      console.error("Error setting active setup:", error);
+      alert("Failed to set active setup. Please try again.");
+    } finally {
+      setSettingActiveId(null);
+    }
+  };
+
+  const handleClearActive = async () => {
+    setSettingActiveId("clear");
+    try {
+      const { error } = await supabase
+        .from("bikes")
+        .update({ active_setup_id: null })
+        .eq("id", bikeId);
+
+      if (error) throw error;
+      router.refresh();
+    } catch (error) {
+      console.error("Error clearing active setup:", error);
+      alert("Failed to clear active setup. Please try again.");
+    } finally {
+      setSettingActiveId(null);
+    }
+  };
+
   const getComponentDisplay = (componentId: string | null) => {
     if (!componentId) return "Not configured";
     const component = components[componentId];
@@ -122,14 +164,28 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
       ) : (
         <div className="grid gap-4">
           {setups.map((setup) => (
-            <Card key={setup.id} className="hover:shadow-lg transition-shadow">
+            <Card
+              key={setup.id}
+              className={`hover:shadow-lg transition-shadow ${
+                currentBikeActiveSetupId === setup.id
+                  ? "border-primary border-2"
+                  : ""
+              }`}
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="flex items-center gap-2">
-                      <Settings className="h-5 w-5 text-primary" />
-                      {setup.setup_name}
-                    </CardTitle>
+                    <div className="flex items-center gap-2 mb-1">
+                      <CardTitle className="flex items-center gap-2">
+                        <Settings className="h-5 w-5 text-primary" />
+                        {setup.setup_name}
+                      </CardTitle>
+                      {currentBikeActiveSetupId === setup.id && (
+                        <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
+                          Active
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-muted-foreground">
                       Created: {formatDate(setup.created_at)}
                     </p>
@@ -138,8 +194,19 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
                     <Link
                       href={`/dashboard/bikes/${bikeId}/setups/${setup.id}/edit`}
                     >
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" title="Edit setup">
                         <Edit className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                    <Link
+                      href={`/dashboard/bikes/${bikeId}/setups/${setup.id}/history`}
+                    >
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        title="View version history"
+                      >
+                        <History className="h-4 w-4" />
                       </Button>
                     </Link>
                     <Button
@@ -147,6 +214,7 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
                       size="sm"
                       onClick={() => handleDelete(setup.id, setup.setup_name)}
                       disabled={deletingId === setup.id}
+                      title="Delete setup"
                     >
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
@@ -175,6 +243,27 @@ export function SetupsList({ bikeId, setups }: SetupsListProps) {
                     </p>
                   </div>
                 )}
+                <div className="mt-4 flex gap-2">
+                  {currentBikeActiveSetupId === setup.id ? (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleClearActive()}
+                      disabled={settingActiveId !== null}
+                    >
+                      Remove as Active
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleSetActive(setup.id)}
+                      disabled={settingActiveId !== null}
+                    >
+                      Set as Active
+                    </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
