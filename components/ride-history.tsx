@@ -12,6 +12,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { ActivityMap } from "@/components/activity-map";
 
 interface Ride {
   id: string;
@@ -23,6 +24,9 @@ interface Ride {
   moving_time_seconds: number;
   activity_date: string;
   strava_url: string;
+  polyline?: string;
+  avg_speed?: number;
+  max_speed?: number;
   bikes?: {
     brand: string;
     model: string;
@@ -149,6 +153,12 @@ export function RideHistory() {
               </div>
             </CardHeader>
             <CardContent>
+              {ride.polyline && (
+                <div className="mb-4">
+                  <ActivityMap polyline={ride.polyline} height="h-48" />
+                </div>
+              )}
+
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
                 <div>
                   <p className="text-xs text-muted-foreground">Distance</p>

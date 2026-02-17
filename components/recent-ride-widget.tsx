@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
+import { ActivityMap } from "@/components/activity-map";
 
 interface RecentRideWidgetProps {
   userId: string;
@@ -155,6 +156,12 @@ export function RecentRideWidget({ userId }: RecentRideWidgetProps) {
         </div>
       </CardHeader>
       <CardContent>
+        {ride.polyline && (
+          <div className="mb-4">
+            <ActivityMap polyline={ride.polyline} height="h-48" />
+          </div>
+        )}
+
         <div className="grid gap-3 mb-4">
           <div className="grid grid-cols-3 gap-3">
             <div>
@@ -167,7 +174,7 @@ export function RecentRideWidget({ userId }: RecentRideWidgetProps) {
                 {Math.round(ride.elevation_gain_m)} m
               </p>
             </div>
-            {/* <div>
+            <div>
               <p className="text-xs text-muted-foreground">Setup</p>
               {ride.suspension_setups?.setup_name ? (
                 <Badge variant="outline" className="text-xs">
@@ -178,7 +185,7 @@ export function RecentRideWidget({ userId }: RecentRideWidgetProps) {
                   Not linked
                 </Badge>
               )}
-            </div> */}
+            </div>
           </div>
 
           {ride.bikes && (
