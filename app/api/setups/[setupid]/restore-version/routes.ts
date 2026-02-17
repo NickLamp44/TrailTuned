@@ -4,9 +4,10 @@ import { setupVersionService } from "@/lib/setup-version-service";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { setupId: string } }
+  { params }: { params: Promise<{ setupId: string }> }
 ) {
   try {
+    const { setupId } = await params;
     const supabase = await createClient();
     const {
       data: { user },
@@ -26,14 +27,14 @@ export async function POST(
     }
 
     const restoredVersion = await setupVersionService.restoreVersion(
-      params.setupId,
+      setupId,
       user.id,
       versionId
     );
 
     return NextResponse.json({ version: restoredVersion });
   } catch (error) {
-    console.error("[v0] Error restoring setup version:", error);
+    console.error("Error restoring setup version:", error);
     return NextResponse.json(
       {
         error:

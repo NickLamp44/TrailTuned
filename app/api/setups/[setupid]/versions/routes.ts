@@ -1,29 +1,48 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { setupVersionService } from "@/lib/setup-version-service";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { setupId: string } }
+  segmentData: { params: Promise<{ setupId: string }> }
 ) {
   try {
+    const { setupId } = await segmentData.params;
+    console.log("Versions API hit for setupId:", setupId);
+
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
+      console.log("Versions API - unauthorized");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const versions = await setupVersionService.getSetupVersions(
-      params.setupId,
-      user.id
-    );
+    console.log("Versions API - querying for user:", user.id);
 
-    return NextResponse.json({ versions });
+    const { data: versions, error: versionsError } = await supabase
+      .from("setup_versions")
+      .select("*")
+      .eq("setup_id", setupId)
+      .eq("user_id", user.id)
+      .order("version_number", { ascending: false });
+
+    if (versionsError) {
+      console.error("Versions query error:", versionsError);
+      if (versionsError.code === "42P01") {
+        return NextResponse.json({ versions: [] });
+      }
+      return NextResponse.json(
+        { error: versionsError.message },
+        { status: 500 }
+      );
+    }
+
+    console.log("Versions found:", versions?.length || 0);
+    return NextResponse.json({ versions: versions || [] });
   } catch (error) {
-    console.error("[v0] Error fetching setup versions:", error);
+    console.error("Error fetching setup versions:", error);
     return NextResponse.json(
       {
         error:

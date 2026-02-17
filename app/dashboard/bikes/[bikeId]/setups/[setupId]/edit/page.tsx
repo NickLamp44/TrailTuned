@@ -62,6 +62,7 @@ export default async function EditSetupPage({
     shock_compression: setup.shock_compression?.toString() || "",
     shock_rebound: setup.shock_rebound?.toString() || "",
     shock_air_pressure: setup.shock_air_pressure?.toString() || "",
+    shock_hbo: setup.shock_hbo?.toString() || "",
     shock_ramp_chamber_pressure:
       setup.shock_ramp_chamber_pressure?.toString() || "",
     shock_volume_spacers: setup.shock_volume_spacers?.toString() || "",
