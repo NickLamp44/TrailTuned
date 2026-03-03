@@ -52,7 +52,7 @@ export class StravaService {
     if (!response.ok) {
       throw new Error(`Failed to exchange code for token: ${response.statusText}`)
     }
-    return response.json()
+    return response.json() as Promise<StravaTokenResponse>
   }
 
   async refreshAccessToken(refreshToken: string): Promise<StravaTokenResponse> {
@@ -69,7 +69,7 @@ export class StravaService {
     if (!response.ok) {
       throw new Error(`Failed to refresh token: ${response.statusText}`)
     }
-    return response.json()
+    return response.json() as Promise<StravaTokenResponse>
   }
 
   async getActivities(
@@ -95,7 +95,7 @@ export class StravaService {
     if (!response.ok) {
       throw new Error(`Failed to get activities: ${response.statusText}`)
     }
-    return response.json()
+    return response.json() as Promise<StravaActivity[]>
   }
 
   async getActivity(accessToken: string, activityId: number): Promise<StravaActivity & Record<string, unknown>> {
