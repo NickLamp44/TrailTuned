@@ -1,5 +1,9 @@
-// Re-export everything so consumers can import from "@trailtuned/db"
 export * from "./client"
+export { createClient as createServerClient } from "./server"
+export type { Database } from "./database.types"
 
-// Named re-export for environments that need the raw supabase-js client
-export { createClient as createSupabaseClient } from "@supabase/supabase-js"
+// Typed client type — use this as the parameter type in all service files
+// so TypeScript knows about all table shapes.
+import type { SupabaseClient as SupabaseClientBase } from "@supabase/supabase-js"
+import type { Database } from "./database.types"
+export type SupabaseClient = SupabaseClientBase<Database>

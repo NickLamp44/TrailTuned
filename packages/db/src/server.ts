@@ -1,11 +1,6 @@
-/**
- * Server-side Supabase client — Next.js only (uses @supabase/ssr + next/headers)
- * Import path: @trailtuned/db/server
- *
- * Do NOT import this in apps/native or any non-Next.js context.
- */
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import type { Database } from "./database.types"
 
 export async function createClient() {
   const cookieStore = await cookies()
@@ -13,7 +8,7 @@ export async function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-  return createServerClient(url, key, {
+  return createServerClient<Database>(url, key, {
     cookies: {
       getAll() {
         return cookieStore.getAll()
@@ -25,7 +20,6 @@ export async function createClient() {
           )
         } catch {
           // Called from a Server Component — safe to ignore.
-          // The proxy middleware handles session refresh.
         }
       },
     },

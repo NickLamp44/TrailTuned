@@ -1,11 +1,5 @@
-/**
- * Browser / React Native client
- * Used by: apps/web (client components), apps/native
- *
- * For apps/web server components and API routes, use the server client
- * from @trailtuned/db/server instead.
- */
 import { createClient as createSupabaseBrowserClient } from "@supabase/supabase-js"
+import type { Database } from "./database.types"
 
 export function createBrowserClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.EXPO_PUBLIC_SUPABASE_URL
@@ -19,8 +13,7 @@ export function createBrowserClient() {
     )
   }
 
-  return createSupabaseBrowserClient(url, key)
+  return createSupabaseBrowserClient<Database>(url, key)
 }
 
-// Convenience alias — matches the existing import pattern in the web app
 export const createClient = createBrowserClient

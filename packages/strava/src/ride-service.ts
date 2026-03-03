@@ -1,4 +1,5 @@
 import { stravaService } from "./service"
+import type { SupabaseClient } from "@trailtuned/db"
 
 // Sync throttle: only call Strava API if last sync was more than 15 minutes ago.
 const SYNC_INTERVAL_MS = 15 * 60 * 1000
@@ -10,7 +11,7 @@ export class StravaRideService {
    * Pass force=true to bypass the guard (e.g. manual "Refresh" button).
    */
   async syncUserRides(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string,
     force = false
   ) {
@@ -74,7 +75,7 @@ export class StravaRideService {
   }
 
   async getLatestRide(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ) {
     const { data, error } = await supabase
@@ -90,7 +91,7 @@ export class StravaRideService {
   }
 
   async getUserRides(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string,
     options?: { limit?: number; offset?: number; setupId?: string; bikeId?: string }
   ) {
@@ -114,7 +115,7 @@ export class StravaRideService {
   }
 
   async linkRideToSetup(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     rideId: string,
     setupId: string,
     bikeId: string
@@ -127,7 +128,7 @@ export class StravaRideService {
   }
 
   async unlinkRideFromSetup(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     rideId: string
   ) {
     const { error } = await supabase
@@ -138,7 +139,7 @@ export class StravaRideService {
   }
 
   async isConnected(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ): Promise<boolean> {
     try {
@@ -150,7 +151,7 @@ export class StravaRideService {
   }
 
   async disconnectAccount(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ) {
     await supabase.from("strava_rides").delete().eq("user_id", userId)

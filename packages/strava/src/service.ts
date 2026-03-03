@@ -1,4 +1,5 @@
 import type { StravaTokenResponse, StravaActivity } from "@trailtuned/types"
+import type { SupabaseClient } from "@trailtuned/db"
 
 /**
  * StravaService — token exchange, refresh, and activity fetching.
@@ -114,7 +115,7 @@ export class StravaService {
    * the server client (web API routes) and the browser client (native).
    */
   async saveTokens(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string,
     tokenData: StravaTokenResponse
   ) {
@@ -129,7 +130,7 @@ export class StravaService {
   }
 
   async getTokens(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ) {
     const { data, error } = await supabase
@@ -146,7 +147,7 @@ export class StravaService {
    * Also updates last_synced_at timestamp used by the rate-limit guard.
    */
   async getValidAccessToken(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ): Promise<string> {
     const tokens = await this.getTokens(supabase, userId)
@@ -163,7 +164,7 @@ export class StravaService {
   }
 
   async disconnectAccount(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ) {
     const { error } = await supabase

@@ -1,8 +1,9 @@
 import { stravaRideService } from "./ride-service"
+import type { SupabaseClient } from "@trailtuned/db"
 
 export class SessionService {
   async activateSetup(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string,
     bikeId: string,
     setupId: string
@@ -25,7 +26,7 @@ export class SessionService {
   }
 
   async deactivateSession(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ) {
     const { error } = await supabase
@@ -37,7 +38,7 @@ export class SessionService {
   }
 
   async getActiveSession(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ) {
     const { data, error } = await supabase
@@ -52,7 +53,7 @@ export class SessionService {
   }
 
   async syncAndLinkRides(
-    supabase: ReturnType<typeof import("@supabase/supabase-js").createClient>,
+    supabase: SupabaseClient,
     userId: string
   ) {
     await stravaRideService.syncUserRides(supabase, userId)
